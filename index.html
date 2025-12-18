@@ -13,9 +13,16 @@
         <table>
             <thead>
             <tr>
-                <th class="sort" data-sort="name">Name</th>
-                <th class="sort" data-sort="age">Age</th>
-                <th class="sort" data-sort="city">City</th>
+                <th class="sort" data-sort="name">Nombre</th>
+                <th class="sort" data-sort="device">Dispositivo</th>
+                <th class="sort" data-sort="motive">Motivo</th>
+                <th class="sort" data-sort="diagnostic">Diagnostico</th>
+                <th class="sort" data-sort="status">Estado</th>
+                <th class="sort" data-sort="contact">Contacto</th>
+                <th class="sort" data-sort="email">Email</th>
+                <th class="sort" data-sort="observation">Observación</th>
+                <th class="sort" data-sort="nro-order">Nro Orden</th>
+                <th class="sort" data-sort="date-order">Fecha de entrega</th>
                 <th colspan="2">
                 <input type="text" class="search" placeholder="Search contact" />
                 </th>
@@ -42,7 +49,7 @@
             <input type="text" id="device-field" placeholder="Dispositivo" />
             </td>
             <td class="date-order">
-            <input type="text" id="date-order-field" placeholder="Fecha_ingreso" />
+            <input type="hidden" id="date-order-field" placeholder="Fecha_ingreso" />
             </td>
             <td class="motive">
             <input type="text" id="motive-field" placeholder="Motivo" />
@@ -51,10 +58,10 @@
             <input type="text" id="diagnostic-field" placeholder="diagnostico" />
             </td>
             <td class="status">
-            <input type="text" id="status-field" placeholder="Estado" />
+            <input type="hidden" id="status-field" placeholder="Estado" />
             </td>
             <td class="date-deliver">
-            <input type="text" id="date-deliver-field" placeholder="Fecha_entrega" />
+            <input type="hidden" id="date-deliver-field" placeholder="Fecha_entrega" />
             </td>
             <td class="contact">
             <input type="text" id="contact-field" placeholder="Contacto" />

@@ -3,4 +3,5 @@ body {
 }
 table td, table th {
   padding:5px;
+  border: solid 1px red;
 }

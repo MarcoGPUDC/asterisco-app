@@ -1,31 +1,49 @@
 
-console.log('js cargado')
+var contactList = 0;
+console.log(contactList)
 async function obtenerPedidos() {
-    fetch('pedidos')
+    fetch('/pedidos')
     .then(res => res.json())
-    .then(data => {
-        data.forEach(tupla => {
+    .then(data => {        
+        if (data.length !== 0) {
+          // Init list
+          contactList = new List('contacts', options);
+          data.forEach(tupla => {
             contactList.add({
                 id: tupla.id,
                 name: tupla.nombre,
                 device: tupla.dispositivo,
             });
         })
+        } else {
+          console.log("No hay solicitudes")
+        }
+        
     })
 }
 
 
 var options = {
-  valueNames: [ 'id', 'name', 'device', 'date-order', 'motive', 'diagnostic', 'status', 'date-deliver', 'contact', 'email', 'observation', 'nro-order' ]
+  valueNames: [ 'id', 'name', 'device', 'dateOrder', 'motive', 'diagnostic', 'status', 'dateDeliver', 'contact', 'email', 'observation', 'nroOrder'],
+  item:`<tr><td><h3 class="name"></h3></td>
+          <td class="device"></td>
+          <td class="motive"></td>
+          <td class="diagnostic"></td>
+          <td class="status"></td>
+          <td class="contact"></td>
+          <td class="email"></td>
+          <td class="observation"></td>
+          <td class="nroOrder"></td>
+          <td class="dateOrder"></td>
+        </tr>`
 };
 
-// Init list
-var contactList = new List('contacts', options);
 
-var idField = $("#id-field"),
+
+var idField = $("#id-field").hide(),
     nameField = $('#name-field'),
-    ageField = $('#device-field'),
-    cityField = $('#date-order-field'),
+    deviceField = $('#device-field'),
+    dateOrderField = $('#date-order-field'),
     motiveField = $('#motive-field'),
     diagnosticField = $('#diagnostic-field'),
     statusField = $('#status-field'),
@@ -42,14 +60,48 @@ var idField = $("#id-field"),
 // Sets callbacks to the buttons in the list
 refreshCallbacks();
 obtenerPedidos();
-console.log(addBtn);
-addBtn.click(function(){
-    contactList.add({
-        id: Math.floor(Math.random()*110000),
-        name: nameField.val(),
-        age: ageField.val(),
-        city: cityField.val()
+addBtn.click(async function(){
+  if (contactList == 0){
+    const values = {
+      name: nameField.val(),
+      device: deviceField.val(),
+      motive: motiveField.val(),
+      diagnostic: diagnosticField.val(),
+      contact: contactField.val(),
+      email: emailField.val(),
+      observation: observationField.val(),
+      nroOrder: nroOrderField.val()
+    };
+    try {
+    const response = await fetch("add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
     });
+
+    const result = await response.json();
+    console.log(result);
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+    contactList = new List('contacts', options, [values]);
+  } else {
+    console.log(contactList.length)
+    contactList.add({
+        name: nameField.val(),
+        device: deviceField.val(),
+        motive: motiveField.val(),
+        diagnostic: diagnosticField.val(),
+        contact: contactField.val(),
+        email: emailField.val(),
+        observation: observationField.val(),
+        nroOrder: nroOrderField.val() 
+    });
+  }
+    
   clearFields();
   refreshCallbacks();
 });
@@ -57,10 +109,14 @@ addBtn.click(function(){
 editBtn.click(function() {
     var item = contactList.get('id', idField.val())[0];
     item.values({
-        id:idField.val(),
         name: nameField.val(),
-        age: ageField.val(),
-        city: cityField.val()
+        device: deviceField.val(),
+        motive: motiveField.val(),
+        diagnostic: diagnosticField.val(),
+        contact: contactField.val(),
+        email: emailField.val(),
+        observation: observationField.val(),
+        nroOrder: nroOrderField.val() 
     });
     clearFields();
     editBtn.hide();
@@ -81,9 +137,17 @@ function refreshCallbacks() {
     var itemId = $(this).closest('tr').find('.id').text();
     var itemValues = contactList.get('id', itemId)[0].values();
     idField.val(itemValues.id);
-    nameField.val(itemValues.name);
-    ageField.val(itemValues.age);
-    cityField.val(itemValues.city);
+    nameFieldid.val(itemValues.name);
+    deviceFieldid.val(itemValues.device);
+    dateOrderField.val(itemValues.dateOrder);
+    motiveField.val(itemValues.motive);
+    diagnosticField.val(itemValues.diagnostic);
+    statusField.val(itemValues.status);
+    dateDeliverFiel.val(itemValues.dateDeliver);
+    contactField.val(itemValues.contact);
+    emailField.val(itemValues.email);
+    observationField.val(itemValues.observation);
+    nroOrderField.val(itemValues.nroOrder);
     
     editBtn.show();
     addBtn.hide();
@@ -91,7 +155,16 @@ function refreshCallbacks() {
 }
 
 function clearFields() {
+  idField.val('');
   nameField.val('');
-  ageField.val('');
-  cityField.val('');
+  deviceField.val('');
+  dateOrderField.val('');
+  motiveField.val('');
+  diagnosticField.val('');
+  statusField.val('');
+  dateDeliverField.val('');
+  contactField.val('');
+  emailField.val('');
+  observationField.val('');
+  nroOrderField.val('');
 }

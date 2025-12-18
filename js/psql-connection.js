@@ -5,7 +5,7 @@ function conectarDB() {
     console.log('conectando');
     const db = pgp({
         // Aquí puedes proporcionar la URL de conexión a tu base de datos
-        connectionString: 'postgres://postgres:admin@localhost:5432/ateriscodb',
+        connectionString: 'postgres://postgres:sigadmin@localhost:5432/asterisco_db',
         // Otros parámetros de configuración, si es necesario
     });
 
