@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aterisco Administrador</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="/js/list.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+    <div id="contacts">
+        <table>
+            <thead>
+            <tr>
+                <th class="sort" data-sort="name">Name</th>
+                <th class="sort" data-sort="age">Age</th>
+                <th class="sort" data-sort="city">City</th>
+                <th colspan="2">
+                <input type="text" class="search" placeholder="Search contact" />
+                </th>
+            </tr>
+            </thead>
+            <tbody class="list">
+            <!--EJEMPLO DE TUPLA
+            <tr>
+                <td class="id" style="display:none;">1</td>
+                <td class="name">Jonny</td>
+                <td class="age">27</td>
+                <td class="city">Stockholm</td>
+                <td class="edit"><button class="edit-item-btn">Edit</button></td>
+                <td class="remove"><button class="remove-item-btn">Remove</button></td>
+            </tr>-->
+            </tbody>
+        </table>
+        <table>
+            <td class="name">
+            <input type="hidden" id="id-field" />
+            <input type="text" id="name-field" placeholder="Name" />
+            </td>
+            <td class="device">
+            <input type="text" id="device-field" placeholder="Dispositivo" />
+            </td>
+            <td class="date-order">
+            <input type="text" id="date-order-field" placeholder="Fecha_ingreso" />
+            </td>
+            <td class="motive">
+            <input type="text" id="motive-field" placeholder="Motivo" />
+            </td>
+            <td class="diagnostic">
+            <input type="text" id="diagnostic-field" placeholder="diagnostico" />
+            </td>
+            <td class="status">
+            <input type="text" id="status-field" placeholder="Estado" />
+            </td>
+            <td class="date-deliver">
+            <input type="text" id="date-deliver-field" placeholder="Fecha_entrega" />
+            </td>
+            <td class="contact">
+            <input type="text" id="contact-field" placeholder="Contacto" />
+            </td>
+            <td class="email">
+            <input type="text" id="email-field" placeholder="Correo" />
+            </td>
+            <td class="observation">
+            <input type="text" id="observation-field" placeholder="Observación" />
+            </td>
+            <td class="nro-order">
+            <input type="text" id="nro-order-field" placeholder="Numero_orden" />
+            </td>
+            <td class="add">
+            <button id="add-btn">Add</button>
+            <button id="edit-btn">Edit</button>
+            </td>
+        </table>    
+    </div>
+</body>
+<script src="/index.js" defer></script>
+</html>
