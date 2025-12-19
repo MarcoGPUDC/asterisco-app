@@ -11,7 +11,7 @@
 <body>
     <div id="contacts">
         <table>
-            <thead>
+            <thead >
             <tr>
                 <th class="sort" data-sort="name">Nombre</th>
                 <th class="sort" data-sort="device">Dispositivo</th>
@@ -21,10 +21,10 @@
                 <th class="sort" data-sort="contact">Contacto</th>
                 <th class="sort" data-sort="email">Email</th>
                 <th class="sort" data-sort="observation">Observación</th>
-                <th class="sort" data-sort="nro-order">Nro Orden</th>
-                <th class="sort" data-sort="date-order">Fecha de entrega</th>
+                <th class="sort" data-sort="nroOrder">Nro Orden</th>
+                <th class="sort" data-sort="dateOrder">Fecha de ingreso</th>
                 <th colspan="2">
-                <input type="text" class="search" placeholder="Search contact" />
+                <input type="text" class="search" placeholder="Buscar pedido" />
                 </th>
             </tr>
             </thead>
@@ -40,28 +40,19 @@
             </tr>-->
             </tbody>
         </table>
-        <table>
+        <table class="tablaCampos">
             <td class="name">
-            <input type="hidden" id="id-field" />
+            <input type="hidden" id="id-field"/>
             <input type="text" id="name-field" placeholder="Name" />
             </td>
             <td class="device">
             <input type="text" id="device-field" placeholder="Dispositivo" />
-            </td>
-            <td class="date-order">
-            <input type="hidden" id="date-order-field" placeholder="Fecha_ingreso" />
             </td>
             <td class="motive">
             <input type="text" id="motive-field" placeholder="Motivo" />
             </td>
             <td class="diagnostic">
             <input type="text" id="diagnostic-field" placeholder="diagnostico" />
-            </td>
-            <td class="status">
-            <input type="hidden" id="status-field" placeholder="Estado" />
-            </td>
-            <td class="date-deliver">
-            <input type="hidden" id="date-deliver-field" placeholder="Fecha_entrega" />
             </td>
             <td class="contact">
             <input type="text" id="contact-field" placeholder="Contacto" />
@@ -76,8 +67,8 @@
             <input type="text" id="nro-order-field" placeholder="Numero_orden" />
             </td>
             <td class="add">
-            <button id="add-btn">Add</button>
-            <button id="edit-btn">Edit</button>
+            <button id="add-btn" class="button-8">Add</button>
+            <button id="edit-btn" class="button-32">Edit</button>
             </td>
         </table>    
     </div>

@@ -1,31 +1,55 @@
 
 var contactList = 0;
-console.log(contactList)
 async function obtenerPedidos() {
     fetch('/pedidos')
     .then(res => res.json())
-    .then(data => {        
-        if (data.length !== 0) {
+    .then(data => {
+        if (data.length === 0) {
           // Init list
           contactList = new List('contacts', options);
           data.forEach(tupla => {
-            contactList.add({
-                id: tupla.id,
-                name: tupla.nombre,
-                device: tupla.dispositivo,
-            });
+              contactList.add({
+                  id: tupla.id,
+                  name: tupla.nombre,
+                  device: tupla.dispositivo,
+                  motive: tupla.motivo,
+                  diagnostic: tupla.diagnostico,
+                  status: tupla.estado,
+                  contact: tupla.contacto,
+                  email: tupla.email,
+                  observation: tupla.observacion,
+                  nroOrder: tupla.nro_pedido
+              });
         })
         } else {
-          console.log("No hay solicitudes")
-        }
-        
+          contactList = new List('contacts', options);
+              data.forEach(tupla => {
+                if (contactList.get('id',tupla.id).length == 0){
+                  contactList.add({
+                    id: tupla.id,
+                    name: tupla.nombre,
+                    device: tupla.dispositivo,
+                    motive: tupla.motivo,
+                    diagnostic: tupla.diagnostico,
+                    status: tupla.estado,
+                    contact: tupla.contacto,
+                    email: tupla.email,
+                    observation: tupla.observacion,
+                    nroOrder: tupla.nro_pedido,
+                    dateOrder: tupla.fecha_ingreso
+                  });
+                }
+              });
+            }
+      refreshCallbacks();
     })
 }
 
 
+
 var options = {
   valueNames: [ 'id', 'name', 'device', 'dateOrder', 'motive', 'diagnostic', 'status', 'dateDeliver', 'contact', 'email', 'observation', 'nroOrder'],
-  item:`<tr><td><h3 class="name"></h3></td>
+  item:`<tr class="tuplaPedido"><td><imput style="display:none;" class="id"></imput><h3 class="name"></h3></td>
           <td class="device"></td>
           <td class="motive"></td>
           <td class="diagnostic"></td>
@@ -35,6 +59,8 @@ var options = {
           <td class="observation"></td>
           <td class="nroOrder"></td>
           <td class="dateOrder"></td>
+          <td class="edit"><button class="edit-item-btn button-32">Edit</button></td>
+          <td class="remove"><button class="remove-item-btn button-33">Remove</button></td>
         </tr>`
 };
 
@@ -43,7 +69,6 @@ var options = {
 var idField = $("#id-field").hide(),
     nameField = $('#name-field'),
     deviceField = $('#device-field'),
-    dateOrderField = $('#date-order-field'),
     motiveField = $('#motive-field'),
     diagnosticField = $('#diagnostic-field'),
     statusField = $('#status-field'),
@@ -57,11 +82,25 @@ var idField = $("#id-field").hide(),
     removeBtns = $('.remove-item-btn'),
     editBtns = $('.edit-item-btn');
 
+const regexNroOrder = /^\d{1,8}$/;
+
+nroOrderField.on("input", function () {
+  const isValid = regexNroOrder.test($(this).val());
+
+  addBtn.prop("disabled", !isValid);
+
+  $(this).css(
+    "border",
+    isValid ? "2px solid green" : "2px solid red"
+  );
+});
+
+
+
 // Sets callbacks to the buttons in the list
 refreshCallbacks();
 obtenerPedidos();
 addBtn.click(async function(){
-  if (contactList == 0){
     const values = {
       name: nameField.val(),
       device: deviceField.val(),
@@ -82,45 +121,57 @@ addBtn.click(async function(){
     });
 
     const result = await response.json();
-    console.log(result);
+    
+  } catch (error) {
+    console.error("Error:", error);
+  }    
+  clearFields();
+  refreshCallbacks();
+  obtenerPedidos();
+});
+
+editBtn.click(async function() {
+    const values = {
+      id: idField.val(),
+      name: nameField.val(),
+      device: deviceField.val(),
+      motive: motiveField.val(),
+      diagnostic: diagnosticField.val(),
+      contact: contactField.val(),
+      email: emailField.val(),
+      observation: observationField.val(),
+      nroOrder: nroOrderField.val()
+    };
+    try {
+    const response = await fetch("update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    });
+
+    const result = await response.json();
+    var item = contactList.get('id', idField.val())[0];
+    item.values({
+      name: nameField.val(),
+      device: deviceField.val(),
+      motive: motiveField.val(),
+      diagnostic: diagnosticField.val(),
+      contact: contactField.val(),
+      email: emailField.val(),
+      observation: observationField.val(),
+      nroOrder: nroOrderField.val()
+    });
+
 
   } catch (error) {
     console.error("Error:", error);
-  }
-    contactList = new List('contacts', options, [values]);
-  } else {
-    console.log(contactList.length)
-    contactList.add({
-        name: nameField.val(),
-        device: deviceField.val(),
-        motive: motiveField.val(),
-        diagnostic: diagnosticField.val(),
-        contact: contactField.val(),
-        email: emailField.val(),
-        observation: observationField.val(),
-        nroOrder: nroOrderField.val() 
-    });
-  }
-    
-  clearFields();
-  refreshCallbacks();
-});
-
-editBtn.click(function() {
-    var item = contactList.get('id', idField.val())[0];
-    item.values({
-        name: nameField.val(),
-        device: deviceField.val(),
-        motive: motiveField.val(),
-        diagnostic: diagnosticField.val(),
-        contact: contactField.val(),
-        email: emailField.val(),
-        observation: observationField.val(),
-        nroOrder: nroOrderField.val() 
-    });
+  }    
     clearFields();
     editBtn.hide();
     addBtn.show();
+    obtenerPedidos();
 });
 
 function refreshCallbacks() {
@@ -128,22 +179,33 @@ function refreshCallbacks() {
   removeBtns = $(removeBtns.selector);
   editBtns = $(editBtns.selector);
   
-  removeBtns.click(function() {
+  removeBtns.click(async function() {
     var itemId = $(this).closest('tr').find('.id').text();
+     try {
+    const response = await fetch("remove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({itemId:parseInt(itemId)})
+    });
+
+    const result = await response.json();
     contactList.remove('id', itemId);
+  } catch (error) {
+    console.error("Error:", error);
+  }    
   });
   
   editBtns.click(function() {
     var itemId = $(this).closest('tr').find('.id').text();
     var itemValues = contactList.get('id', itemId)[0].values();
     idField.val(itemValues.id);
-    nameFieldid.val(itemValues.name);
-    deviceFieldid.val(itemValues.device);
-    dateOrderField.val(itemValues.dateOrder);
+    nameField.val(itemValues.name);
+    deviceField.val(itemValues.device);
     motiveField.val(itemValues.motive);
     diagnosticField.val(itemValues.diagnostic);
     statusField.val(itemValues.status);
-    dateDeliverFiel.val(itemValues.dateDeliver);
     contactField.val(itemValues.contact);
     emailField.val(itemValues.email);
     observationField.val(itemValues.observation);
@@ -158,11 +220,9 @@ function clearFields() {
   idField.val('');
   nameField.val('');
   deviceField.val('');
-  dateOrderField.val('');
   motiveField.val('');
   diagnosticField.val('');
   statusField.val('');
-  dateDeliverField.val('');
   contactField.val('');
   emailField.val('');
   observationField.val('');

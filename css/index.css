@@ -1,7 +1,187 @@
 body {
   font-family:sans-serif;
 }
-table td, table th {
-  padding:5px;
-  border: solid 1px red;
+
+.sort {
+  cursor: pointer;
+  border: 1px solid rgba(102, 76, 251, 0.355); 
+}
+
+th.sort {
+  cursor: pointer;
+  position: relative;
+  padding-right: 20px;
+}
+
+/* Icono neutro */
+th.sort::after {
+  content: "⇅";
+  position: absolute;
+  right: 6px;
+  opacity: 0.4;
+  font-size: 0.8em;
+}
+
+/* Ascendente */
+th.sort.asc::after {
+  content: "▲";
+  opacity: 1;
+}
+
+/* Descendente */
+th.sort.desc::after {
+  content: "▼";
+  opacity: 1;
+}
+
+
+tbody {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: system-ui, sans-serif;
+}
+
+tbody th {
+  background: #f5f5f5;
+  cursor: pointer;
+  padding: 10px;
+  text-align: center;
+}
+
+tbody tr {
+  padding: 10px;
+  
+}
+
+.tuplaPedido td{
+  border-bottom: 1px solid #b8a2f2;
+  text-align: center;
+}
+
+.tuplaPedido:nth-child(even){
+  background-color: #edf2fa;
+}
+
+.tuplaPedido:nth-child(even):hover{
+  background-color: #c2c2c2;
+}
+
+.tuplaPedido:nth-child(odd){
+  background-color: #dadada;
+}
+
+.tuplaPedido:nth-child(odd):hover{
+  background-color: #c2c2c2;
+}
+
+.search {
+  margin-bottom: 12px;
+  padding: 8px;
+  width: 100%;
+}
+/* CSS */
+.button-8 {
+  background-color: #b9e1fd;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, 0.7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #175c8d;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  margin: 0;
+  outline: none;
+  padding: 8px .8em;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.button-8:hover,
+.button-8:focus {
+  background-color: #b3d3ea;
+  color: #2c5777;
+}
+
+.button-8:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.button-8:active {
+  background-color: #619dca;
+  box-shadow: none;
+  color: #2c5777;
+}
+
+/* CSS */
+.button-32 {
+  background-color: #fff000;
+  border-radius: 12px;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 15px;
+  text-align: center;
+  transition: 200ms;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-32:not(:disabled):hover,
+.button-32:not(:disabled):focus {
+  outline: 0;
+  background: #f4e603;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);
+}
+
+.button-32:disabled {
+  filter: saturate(0.2) opacity(0.5);
+  -webkit-filter: saturate(0.2) opacity(0.5);
+  cursor: not-allowed;
+}
+
+/* CSS */
+.button-33 {
+  background-color: #ff0000;
+  border-radius: 12px;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 15px;
+  text-align: center;
+  transition: 200ms;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-33:not(:disabled):hover,
+.button-33:not(:disabled):focus {
+  outline: 0;
+  background: #ff0000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);
+}
+
+.button-33:disabled {
+  filter: saturate(0.2) opacity(0.5);
+  -webkit-filter: saturate(0.2) opacity(0.5);
+  cursor: not-allowed;
 }

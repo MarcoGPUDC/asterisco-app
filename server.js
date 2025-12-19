@@ -4,7 +4,8 @@ const path = require('path');
 var app = express();
 const hostname = '127.0.0.1'
 const port = 3010
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
