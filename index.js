@@ -1,7 +1,6 @@
-
 var contactList = 0;
 async function obtenerPedidos() {
-    fetch('/pedidos')
+    fetch(`/pedidos`)
     .then(res => res.json())
     .then(data => {
         if (data.length === 0) {
@@ -61,6 +60,8 @@ var options = {
           <td class="dateOrder"></td>
           <td class="edit"><button class="edit-item-btn button-32">Edit</button></td>
           <td class="remove"><button class="remove-item-btn button-33">Remove</button></td>
+          <td class="send"><button class="send-item-btn button-3">Entregar</button></td>
+          <td class="contact"><img class="contact-item-btn" src="./img/contact-mail.png" title="contact icons"></img></td>
         </tr>`
 };
 
@@ -77,16 +78,19 @@ var idField = $("#id-field").hide(),
     emailField = $('#email-field'),
     observationField = $('#observation-field'),
     nroOrderField = $('#nro-order-field'),
+    allbtn = $('#todos-btn'),
+    ordersbtn = $('#pedidos-btn').hide(),
     addBtn = $(`#add-btn`),
     editBtn = $('#edit-btn').hide(),
     removeBtns = $('.remove-item-btn'),
-    editBtns = $('.edit-item-btn');
+    editBtns = $('.edit-item-btn'),
+    sendBtns = $('.send-item-btn'),
+    contactBtns = $('.contact-item-btn');
 
 const regexNroOrder = /^\d{1,8}$/;
 
 nroOrderField.on("input", function () {
   const isValid = regexNroOrder.test($(this).val());
-
   addBtn.prop("disabled", !isValid);
 
   $(this).css(
@@ -94,7 +98,6 @@ nroOrderField.on("input", function () {
     isValid ? "2px solid green" : "2px solid red"
   );
 });
-
 
 
 // Sets callbacks to the buttons in the list
@@ -174,11 +177,67 @@ editBtn.click(async function() {
     obtenerPedidos();
 });
 
+allbtn.click(async function () {
+  fetch(`/pedidosTodos`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.length === 0) {
+          // Init list
+          contactList = new List('contacts', options);
+          data.forEach(tupla => {
+              contactList.add({
+                  id: tupla.id,
+                  name: tupla.nombre,
+                  device: tupla.dispositivo,
+                  motive: tupla.motivo,
+                  diagnostic: tupla.diagnostico,
+                  status: tupla.estado,
+                  contact: tupla.contacto,
+                  email: tupla.email,
+                  observation: tupla.observacion,
+                  nroOrder: tupla.nro_pedido
+              });
+        })
+        } else {
+          contactList = new List('contacts', options);
+              data.forEach(tupla => {
+                if (contactList.get('id',tupla.id).length == 0){
+                  contactList.add({
+                    id: tupla.id,
+                    name: tupla.nombre,
+                    device: tupla.dispositivo,
+                    motive: tupla.motivo,
+                    diagnostic: tupla.diagnostico,
+                    status: tupla.estado,
+                    contact: tupla.contacto,
+                    email: tupla.email,
+                    observation: tupla.observacion,
+                    nroOrder: tupla.nro_pedido,
+                    dateOrder: tupla.fecha_ingreso
+                  });
+                }
+              });
+            }
+      refreshCallbacks();
+      allbtn.hide();
+      ordersbtn.show();
+    })
+})
+
+ordersbtn.click(async function (){
+  contactList.clear();
+  obtenerPedidos();
+  ordersbtn.hide();
+  allbtn.show();
+})
+
 function refreshCallbacks() {
   // Needed to add new buttons to jQuery-extended object
   removeBtns = $(removeBtns.selector);
   editBtns = $(editBtns.selector);
-  
+  sendBtns = $(sendBtns.selector);
+  contactBtns = $(contactBtns.selector);
+
   removeBtns.click(async function() {
     var itemId = $(this).closest('tr').find('.id').text();
      try {
@@ -214,6 +273,30 @@ function refreshCallbacks() {
     editBtn.show();
     addBtn.hide();
   });
+
+  sendBtns.click(async function () {
+    var itemId = $(this).closest('tr').find('.id').text();
+    try {
+    const response = await fetch("send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({itemId:parseInt(itemId)})
+    });
+    const result = await response.json();
+    contactList.remove('id', itemId);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    obtenerPedidos();
+  })
+
+  contactBtns.click(async function () {
+    var itemId = $(this).closest('tr').find('.id').text();
+    var itemValues = contactList.get('id', itemId)[0].values();
+    abrirVentana(itemValues.contact, itemValues.email, itemValues.name, itemValues.device);
+  });
 }
 
 function clearFields() {
@@ -228,3 +311,49 @@ function clearFields() {
   observationField.val('');
   nroOrderField.val('');
 }
+
+function abrirVentana(num, email, name, device) {
+  // Overlay
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+
+  // Ventana
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  const text = `Hola ${name}, nos contactamos desde Asterisco Redes. Queremos avisarte que tu dispositivo ${device}`
+  const subject = encodeURIComponent("ACERCA DE TU DISPOSITIVO");
+  const body = encodeURIComponent(
+  text
+);
+
+  const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+  // Contenido
+  modal.innerHTML = `
+    <h3>Contactar A: ${name} Dispositivo: ${device}</h3>
+    <p>¿Qué acción desea realizar?</p>
+    <div class="acciones">
+      <a href="https://api.whatsapp.com/send?phone=${num}&text=${text}" target="_blank"><img id="btnMensaje" src="./img/whatsapp.png"></img></a>
+      <a href=${url} target="_blank"><img id="btnCorreo" src="./img/gmail.png"></img></a>
+      <button id="btnCancelar">Cancelar</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Eventos
+  document.getElementById("btnMensaje").onclick = () => {
+    cerrarVentana();
+  };
+
+  document.getElementById("btnCorreo").onclick = () => {
+    cerrarVentana();
+  };
+
+  document.getElementById("btnCancelar").onclick = cerrarVentana;
+
+  function cerrarVentana() {
+    overlay.remove();
+  }
+}
+
