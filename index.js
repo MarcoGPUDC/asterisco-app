@@ -58,8 +58,8 @@ var options = {
           <td class="observation"></td>
           <td class="nroOrder"></td>
           <td class="dateOrder"></td>
-          <td class="edit"><button class="edit-item-btn button-32">Edit</button></td>
-          <td class="remove"><button class="remove-item-btn button-33">Remove</button></td>
+          <td class="edit"><button class="edit-item-btn button-32">Editar</button></td>
+          <td class="remove"><button class="remove-item-btn button-33">Eliminar</button></td>
           <td class="send"><button class="send-item-btn button-3">Entregar</button></td>
           <td class="contact"><img class="contact-item-btn" src="./img/contact-mail.png" title="contact icons"></img></td>
         </tr>`
@@ -329,7 +329,7 @@ function abrirVentana(num, email, name, device) {
   const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
   // Contenido
   modal.innerHTML = `
-    <h3>Contactar A: ${name} Dispositivo: ${device}</h3>
+    <h3>Contactar a: ${name} <br>Dispositivo: ${device}</h3>
     <p>¿Qué acción desea realizar?</p>
     <div class="acciones">
       <a href="https://api.whatsapp.com/send?phone=${num}&text=${text}" target="_blank"><img id="btnMensaje" src="./img/whatsapp.png"></img></a>
